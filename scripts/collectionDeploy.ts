@@ -17,7 +17,8 @@ export async function run(provider: NetworkProvider, args: string[]) {
     let codeItem = await compile('sbt-item/SbtItem');
 
     // load image from the internet
-    let imageData = Buffer.from(await (await (await fetch('https://www.svgheart.com/wp-content/uploads/2021/11/graduation-diploma-with-ribbon-grad-free-svg-file-SvgHeart.Com.png')).blob()).arrayBuffer())
+    let imageData = Buffer.from(await (await (await fetch('https://tonolingo.ru/assets/images/tonolingo_logo.webp')).blob()).arrayBuffer())
+    console.log(imageData)
     let imageDataSbt = Buffer.from(await (await (await fetch('https://www.svgheart.com/wp-content/uploads/2023/05/high-school-diploma_514-430-min.png')).blob()).arrayBuffer())
     // load image from the file
     //let imageData = Buffer.from(require('fs').readFileSync('temp/data/graduation-diploma-with-ribbon-grad-free-svg-file-SvgHeart.Com.png'))
@@ -26,15 +27,11 @@ export async function run(provider: NetworkProvider, args: string[]) {
     let config = {
         ownerAddress: ownerAddress,
         collectionContent: encodeOnChainContent({
-            "name": "Diplomas",
-            "description": "Collection of personal diplomas for students",
-            "image_data": imageData
+            "name": "TONolingo achievements",
+            "description": "Collection of achievements in TONolingo app.",
+            "image": "https://tonolingo.ru/assets/images/tonolingo_logo.webp"
         }),
-        commonContent: encodeOnChainContent({
-            "name": "Personal diploma for the student",
-            "description": "Diploma for the student: ",
-            "image_data": imageDataSbt
-        }),
+        commonContent: encodeOnChainContent({}),
         nftItemCode: codeItem,
         royaltyParams: {
             royaltyFactor: 0,
@@ -67,7 +64,7 @@ export async function run(provider: NetworkProvider, args: string[]) {
     fs.writeFileSync(collectionInfoFile, collectionInfoStr);
     console.log('Collection info saved to ', collectionInfoFile);
 
-    await collection.sendDeploy(provider.sender(), toNano('0.05'));
+    collection.sendDeploy(provider.sender(), toNano('0.05'));
     console.log('Deploy request sent');
 
     await provider.waitForDeploy(collection.address);
